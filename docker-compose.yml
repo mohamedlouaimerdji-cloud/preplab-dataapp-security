@@ -1,0 +1,40 @@
+# PrepLab - Data & Applications Security target environment
+# Everything here runs on YOUR machine. You own it, so testing it is authorised.
+services:
+  web:
+    build: ./web
+    container_name: preplab-web
+    ports:
+      - "8080:5000"
+    environment:
+      # Deliberately weak: secrets in the environment, in source control.
+      - APP_SECRET=dev-secret-change-me
+      - DB_PASSWORD=preplab
+      - SESSION_COOKIE_SECURE=false
+    networks: [frontend, backend]
+    depends_on: [db]
+
+  db:
+    image: postgres:16-alpine
+    container_name: preplab-db
+    environment:
+      - POSTGRES_PASSWORD=preplab
+      - POSTGRES_USER=preplab
+      - POSTGRES_DB=preplab
+    # Deliberately weak: the database port is published to the host.
+    ports:
+      - "5432:5432"
+    networks: [backend]
+
+  files:
+    image: nginx:alpine
+    container_name: preplab-files
+    volumes:
+      - ./files:/usr/share/nginx/html:ro
+    ports:
+      - "8081:80"
+    networks: [frontend]
+
+networks:
+  frontend:
+  backend:

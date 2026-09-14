@@ -1,0 +1,5 @@
+Nightly backup notes (synthetic)
+- Target: s3://preplab-backups (default encryption: DISABLED)
+- Database dump includes full customer table
+- Restore tested: never
+- Backup service account: svc-rep / trustno1
